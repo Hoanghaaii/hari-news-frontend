@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hari News Frontend
 
-## Getting Started
+Ứng dụng tin tức được xây dựng với Next.js, Zustand, React Query, Axios, Shadcn/ui và Tailwind CSS.
 
-First, run the development server:
+## 🚀 Công nghệ sử dụng
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 15** - React framework với App Router
+- **Zustand** - State management
+- **React Query (TanStack Query)** - Data fetching và caching
+- **Axios** - HTTP client
+- **Shadcn/ui** - UI component library
+- **Tailwind CSS** - CSS framework
+- **TypeScript** - Type safety
+- **Zod** - Schema validation
+- **React Hook Form** - Form handling
+
+## 🔐 Authentication
+
+Ứng dụng sử dụng **httpOnly cookies** để lưu trữ access token và refresh token, đảm bảo tính bảo mật cao hơn so với localStorage.
+
+### Tính năng bảo mật:
+- Tokens được lưu trong httpOnly cookies (không thể truy cập từ JavaScript)
+- Tự động gửi cookies với mọi request
+- Tự động refresh token khi cần thiết
+- Xử lý logout an toàn
+
+## 📁 Cấu trúc dự án
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx         # Root layout với providers
+│   ├── page.tsx           # Homepage
+│   ├── login/             # Login page
+│   └── register/          # Register page
+├── components/
+│   ├── ui/                # Shadcn/ui components
+│   │   ├── button.tsx
+│   │   ├── input.tsx
+│   │   └── label.tsx
+│   └── auth/              # Auth components
+│       ├── login-form.tsx
+│       └── register-form.tsx
+├── lib/
+│   ├── api/               # API services
+│   │   └── auth.ts
+│   ├── hooks/             # Custom hooks
+│   │   └── use-auth.ts
+│   ├── providers/         # React providers
+│   │   ├── query-provider.tsx
+│   │   ├── theme-provider.tsx
+│   │   └── auth-provider.tsx
+│   ├── store/             # Zustand stores
+│   │   └── auth-store.ts
+│   ├── types.ts           # TypeScript types
+│   ├── utils.ts           # Utility functions
+│   └── axios.ts           # Axios configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Cài đặt
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone dự án:
+```bash
+git clone <repository-url>
+cd hari-news-frontend
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Cài đặt dependencies:
+```bash
+npm install
+```
 
-## Learn More
+3. Tạo file environment:
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_APP_NAME=Hari News
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Chạy development server:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔧 Cấu hình Backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Backend cần hỗ trợ httpOnly cookies cho authentication:
 
-## Deploy on Vercel
+### Login Response:
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "user-id",
+      "email": "user@example.com",
+      "name": "User Name",
+      "role": "user"
+    },
+    "message": "Login successful"
+  }
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Cookies cần set:
+- `accessToken` - JWT access token (httpOnly, secure, sameSite)
+- `refreshToken` - JWT refresh token (httpOnly, secure, sameSite)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### API Endpoints:
+- `POST /api/auth/login` - Đăng nhập
+- `POST /api/auth/register` - Đăng ký
+- `POST /api/auth/logout` - Đăng xuất
+- `GET /api/auth/me` - Lấy thông tin user
+- `POST /api/auth/refresh` - Refresh token
+
+## 📖 Sử dụng
+
+### Auth Hook:
+```tsx
+import { useAuth } from '@/lib/hooks/use-auth';
+
+function MyComponent() {
+  const { user, isAuthenticated, login, logout } = useAuth();
+  
+  // Sử dụng các functions và state
+}
+```
+
+### Zustand Store:
+```tsx
+import { useAuthStore } from '@/lib/store/auth-store';
+
+function MyComponent() {
+  const { user, isAuthenticated } = useAuthStore();
+}
+```
+
+### API Calls:
+```tsx
+import { authApi } from '@/lib/api/auth';
+
+// Gọi API trực tiếp
+const user = await authApi.getCurrentUser();
+```
+
+## 🎨 UI Components
+
+Sử dụng Shadcn/ui components với Tailwind CSS:
+
+```tsx
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+<Button variant="default" size="lg">
+  Click me
+</Button>
+
+<Input placeholder="Enter text..." />
+```
+
+## 🔄 State Management
+
+- **Zustand**: Quản lý global state (auth, user info)
+- **React Query**: Quản lý server state (API data, caching)
+- **Local State**: Sử dụng useState cho component-specific state
+
+## 🚀 Deployment
+
+1. Build dự án:
+```bash
+npm run build
+```
+
+2. Start production server:
+```bash
+npm start
+```
+
+## 📝 License
+
+MIT License
