@@ -1,4 +1,4 @@
-# Hari News Frontend
+# Hari News Frontend – Hệ thống Auth hiện đại
 
 Ứng dụng tin tức được xây dựng với Next.js, Zustand, React Query, Axios, Shadcn/ui và Tailwind CSS.
 
@@ -180,3 +180,110 @@ npm start
 ## 📝 License
 
 MIT License
+
+## Đặc điểm nổi bật
+
+- **Quản lý trạng thái đăng nhập**: Sử dụng Zustand để lưu trạng thái xác thực (`isAuthenticated`, `user`).
+- **API call hiện đại**: Sử dụng React Query để fetch, cache, và tự động refetch thông tin user.
+- **Xử lý token an toàn**: Access/refresh token được lưu ở httpOnly cookie, không lưu ở localStorage.
+- **Xử lý lỗi thông minh**: Tự động lấy message lỗi từ backend để hiển thị toast, không dùng message mặc định của Axios.
+- **Tự động refresh token**: Khi `/auth/me` trả về 401, hệ thống tự gọi `/auth/refresh` và thử lại.
+- **UI hiện đại**: Sử dụng Shadcn/ui và Tailwind CSS cho form và toast.
+- **Tách biệt logic**: API, hooks, store, và utils được tách riêng, dễ bảo trì và mở rộng.
+
+---
+
+## Cách sử dụng hệ thống Auth
+
+### 1. Sử dụng hook `useAuth` trong component
+
+```tsx
+import { useAuth } from '@/lib/hooks/use-auth';
+
+const LoginForm = () => {
+  const { login, isLoginLoading } = useAuth();
+
+  const handleSubmit = (values) => {
+    login(values); // values: { email, password }
+  };
+
+  // ...
+};
+```
+
+### 2. Hiển thị thông báo lỗi/success
+- Khi API trả về lỗi, toast sẽ tự động hiển thị message từ backend (ví dụ: "Sai mật khẩu", "Tài khoản không tồn tại", ...).
+- Khi thành công, toast sẽ hiển thị message thành công.
+
+### 3. Kiểm tra trạng thái đăng nhập và user
+
+```tsx
+const { isAuthenticated, user } = useAuth();
+
+if (isAuthenticated) {
+  // Đã đăng nhập, có thể truy cập user
+}
+```
+
+### 4. Logout
+```tsx
+const { logout } = useAuth();
+logout();
+```
+
+### 5. Đổi mật khẩu, quên mật khẩu, đăng ký...
+Tất cả đều dùng các hàm tương ứng trong hook `useAuth`:
+```tsx
+const { changePassword, forgotPassword, resetPassword, register } = useAuth();
+```
+
+---
+
+## Cấu trúc thư mục chính
+
+```
+src/
+  lib/
+    api/
+      auth.ts           // Gọi API auth
+    hooks/
+      use-auth.ts       // Hook auth chính
+    store/
+      auth-store.ts     // Zustand store cho auth
+    utils/
+      api-utils.ts      // Xử lý response, extract message, ...
+```
+
+---
+
+## Mở rộng & Tùy biến
+
+- **Thêm API mới**: Thêm vào `src/lib/api/auth.ts` và expose qua hook nếu cần.
+- **Thay đổi UI**: Sửa các component form, toast theo ý muốn.
+- **Tùy biến message**: Backend chỉ cần trả về `{ message: "..." }` trong response lỗi là frontend sẽ tự động lấy đúng message để hiển thị.
+
+---
+
+## Lưu ý khi phát triển
+
+- **Không lưu token ở localStorage** để đảm bảo bảo mật.
+- **Luôn dùng các hàm trong hook `useAuth`** để đảm bảo logic đồng nhất.
+- **Nếu backend thay đổi format response**, chỉ cần sửa ở file `api-utils.ts` là đủ.
+- **Nếu muốn mở rộng cho các API khác**, chỉ cần dùng hàm `extractErrorMessage(error)` trong `onError` của mutation.
+
+---
+
+## Ví dụ: Đăng nhập và xử lý lỗi
+
+```tsx
+const { login, isLoginLoading } = useAuth();
+
+const handleLogin = (values) => {
+  login(values); // Nếu sai, toast sẽ hiện đúng message từ backend
+};
+```
+
+## Đóng góp
+
+Nếu muốn mở rộng, tối ưu, hoặc sửa lỗi, hãy tuân thủ cấu trúc và style code hiện tại.
+Mọi thắc mắc hoặc góp ý, liên hệ team FE.

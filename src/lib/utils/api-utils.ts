@@ -21,12 +21,9 @@ export function isErrorResponse(
 
 // Extract data từ success response
 export function extractData<T>(response: ApiResponse<T>): T {
-  console.log("🔍 extractData called with:", response);
   if (isSuccessResponse(response)) {
-    console.log("🔍 extractData success, returning:", response.data);
     return response.data;
   }
-  console.log("🔍 extractData error, throwing:", response.message);
   throw new Error(response.message || "Unknown error");
 }
 
@@ -69,4 +66,32 @@ export async function apiCall<T, R = T>(
     options?.onError?.(apiError);
     throw apiError;
   }
+}
+
+// Lấy message lỗi từ error object của Axios hoặc backend
+export function extractErrorMessage(error: unknown): string {
+  // Axios error có response
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as { response?: unknown }).response === "object"
+  ) {
+    const response = (error as { response?: unknown }).response as {
+      data?: unknown;
+    };
+    // Nếu backend trả về message
+    if (
+      response.data &&
+      typeof (response.data as { message?: unknown }).message === "string"
+    ) {
+      return (response.data as { message: string }).message;
+    }
+  }
+  // Nếu là Error object
+  if (error instanceof Error) {
+    return error.message;
+  }
+  // Fallback
+  return "Đã xảy ra lỗi không xác định!";
 }

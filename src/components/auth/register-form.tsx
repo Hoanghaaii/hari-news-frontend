@@ -36,7 +36,8 @@ export function RegisterForm() {
   });
 
   const onSubmit = (data: RegisterFormData) => {
-    registerUser(data);
+    const { name, email, password } = data;
+    registerUser({ name, email, password });
   };
 
   return (

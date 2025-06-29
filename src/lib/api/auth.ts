@@ -14,23 +14,19 @@ import { extractData, isSuccessResponse } from "@/lib/utils/api-utils";
 export const authApi = {
   // Đăng nhập
   login: async (credentials: LoginCredentials): Promise<MessageData> => {
-    console.log("🔍 Login API called with:", credentials);
     const response = await api.post<ApiResponse<MessageData>>(
       "/auth/login",
       credentials
     );
-    console.log("🔍 Login API response:", response.data);
 
-    // Tạm thời sử dụng flexible check để debug
     if (isSuccessResponse(response.data)) {
-      console.log("🔍 Login API success with flexible check");
       if (response.data.data) {
         return response.data.data;
       }
     }
 
     const result = extractData(response.data);
-    console.log("🔍 Login API extracted data:", result);
+
     return result;
   },
 
@@ -40,6 +36,13 @@ export const authApi = {
       "/auth/register",
       credentials
     );
+
+    if (isSuccessResponse(response.data)) {
+      if (response.data.data) {
+        return response.data.data;
+      }
+    }
+
     return extractData(response.data);
   },
 
