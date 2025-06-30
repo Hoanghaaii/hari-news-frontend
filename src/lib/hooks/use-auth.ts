@@ -5,7 +5,22 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { authApi } from "@/lib/api/auth";
 import { MessageData } from "@/lib/types/api";
 import { toast } from "sonner";
-import { extractErrorMessage } from "@/lib/utils/api-utils";
+
+// Hàm extractErrorMessage lấy message từ error chuẩn hóa của util API
+function extractErrorMessage(error: unknown): string {
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof (error as { message: unknown }).message === "string"
+  ) {
+    return (error as { message: string }).message;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Đã có lỗi xảy ra";
+}
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -155,6 +170,18 @@ export const useAuth = () => {
     },
   });
 
+  // Mutation gửi mã xác minh email
+  const sendEmailVerification = useMutation({
+    mutationFn: authApi.sendEmailVerification,
+    onSuccess: (data: MessageData) => {
+      toast.success(data.message);
+    },
+    onError: (error: unknown) => {
+      const errorMessage = extractErrorMessage(error);
+      toast.error(errorMessage);
+    },
+  });
+
   return {
     // State
     user: currentUser || user,
@@ -169,6 +196,7 @@ export const useAuth = () => {
     changePassword: changePasswordMutation.mutate,
     forgotPassword: forgotPasswordMutation.mutate,
     resetPassword: resetPasswordMutation.mutate,
+    sendEmailVerification,
 
     // Loading states
     isLoginLoading: loginMutation.isPending,

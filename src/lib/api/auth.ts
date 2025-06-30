@@ -1,6 +1,5 @@
-import api from "@/lib/axios";
+import { apiGet, apiPost } from "@/lib/api";
 import {
-  ApiResponse,
   UserData,
   MessageData,
   LoginCredentials,
@@ -9,87 +8,66 @@ import {
   ResetPasswordData,
   User,
 } from "@/lib/types/api";
-import { extractData, isSuccessResponse } from "@/lib/utils/api-utils";
 
 export const authApi = {
   // Đăng nhập
   login: async (credentials: LoginCredentials): Promise<MessageData> => {
-    const response = await api.post<ApiResponse<MessageData>>(
-      "/auth/login",
-      credentials
-    );
-
-    if (isSuccessResponse(response.data)) {
-      if (response.data.data) {
-        return response.data.data;
-      }
-    }
-
-    const result = extractData(response.data);
-
-    return result;
+    return apiPost<MessageData, LoginCredentials>("/auth/login", credentials);
   },
 
   // Đăng ký
   register: async (credentials: RegisterCredentials): Promise<MessageData> => {
-    const response = await api.post<ApiResponse<MessageData>>(
+    return apiPost<MessageData, RegisterCredentials>(
       "/auth/register",
       credentials
     );
-
-    if (isSuccessResponse(response.data)) {
-      if (response.data.data) {
-        return response.data.data;
-      }
-    }
-
-    return extractData(response.data);
   },
 
   // Đăng xuất
   logout: async (): Promise<void> => {
-    await api.post("/auth/logout");
+    await apiPost<undefined, undefined>("/auth/logout");
   },
 
   // Lấy thông tin user hiện tại
   getCurrentUser: async (): Promise<User> => {
-    const response = await api.get<ApiResponse<UserData>>("/auth/me");
-    const userData = extractData(response.data);
-    return userData.user;
+    const res = await apiGet<UserData>("/auth/me");
+    if (!res.data?.user) throw new Error(res.message || "Không tìm thấy thông tin người dùng");
+    return res.data.user;
   },
 
   // Refresh token
   refreshToken: async (): Promise<MessageData> => {
-    const response = await api.post<ApiResponse<MessageData>>("/auth/refresh");
-    return extractData(response.data);
+    return apiPost<MessageData>("/auth/refresh");
   },
 
   // Đổi mật khẩu
   changePassword: async (data: ChangePasswordData): Promise<MessageData> => {
-    const response = await api.post<ApiResponse<MessageData>>(
+    return apiPost<MessageData, ChangePasswordData>(
       "/auth/change-password",
       data
     );
-    return extractData(response.data);
   },
 
   // Quên mật khẩu
   forgotPassword: async (email: string): Promise<MessageData> => {
-    const response = await api.post<ApiResponse<MessageData>>(
-      "/auth/forgot-password",
-      {
-        email,
-      }
-    );
-    return extractData(response.data);
+    return apiPost<MessageData, { email: string }>("/auth/forgot-password", {
+      email,
+    });
   },
 
   // Reset mật khẩu
   resetPassword: async (data: ResetPasswordData): Promise<MessageData> => {
-    const response = await api.post<ApiResponse<MessageData>>(
+    return apiPost<MessageData, ResetPasswordData>(
       "/auth/reset-password",
       data
     );
-    return extractData(response.data);
+  },
+
+  // Gửi email xác minh
+  sendEmailVerification: async (email: string): Promise<MessageData> => {
+    return apiPost<MessageData, { email: string }>(
+      "/auth/send-email-verification",
+      { email }
+    );
   },
 };
