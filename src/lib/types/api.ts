@@ -1,6 +1,6 @@
 // API Response Structure cho tất cả endpoints
 export interface ApiResponse<T = unknown> {
-  status: 'success' | 'error';
+  status: "success" | "error";
   statusCode: number;
   message: string;
   data?: T;
@@ -11,14 +11,14 @@ export interface ApiResponse<T = unknown> {
 
 // Success Response
 export interface ApiSuccessResponse<T = unknown> extends ApiResponse<T> {
-  status: 'success';
+  status: "success";
   statusCode: 200;
   data: T;
 }
 
 // Error Response
 export interface ApiErrorResponse extends ApiResponse {
-  status: 'error';
+  status: "error";
   statusCode: 400 | 401 | 403 | 404 | 422 | 500;
   path: string;
 }
@@ -50,7 +50,7 @@ export interface User {
   emailVerifiedAt: string | null;
   phoneVerifiedAt: string | null;
   status: string;
-  role: 'admin' | 'user';
+  role: "admin" | "user";
   lastLoginAt: string | null;
   loginCount: number;
   lastPasswordChangeAt: string | null;
@@ -73,11 +73,11 @@ export interface RegisterCredentials {
 }
 
 export interface ChangePasswordData {
-  currentPassword: string;
+  oldPassword: string;
   newPassword: string;
 }
 
 export interface ResetPasswordData {
   token: string;
   newPassword: string;
-} 
+}
