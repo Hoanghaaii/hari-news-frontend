@@ -4,6 +4,8 @@ import "./globals.css";
 import { QueryProvider } from "@/lib/providers/query-provider";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import { Toaster } from "sonner";
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +29,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            {children}
+            <Header />
+            <main className="min-h-[calc(100vh-120px)]">{children}</main>
+            <Footer />
             <Toaster position="top-right" richColors />
           </QueryProvider>
         </ThemeProvider>
