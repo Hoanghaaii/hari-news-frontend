@@ -1,0 +1,28 @@
+/* Hiệu ứng nâng card khi hover */
+.news-card {
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+/* Bỏ hiệu ứng hover nâng card */
+/* .news-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25), 0 1.5px 6px 0 rgba(0,0,0,0.10);
+  transform: translateY(-6px) scale(1.02);
+} */
+
+/* Shine effect chỉ chạy một chiều khi hover */
+.news-card-shine {
+  position: absolute;
+  top: 0; left: 0;
+  width: 220%;
+  height: 220%;
+  z-index: 9;
+  pointer-events: none;
+  background: linear-gradient(130deg, rgba(255,255,255,0.0) 65%, rgba(255,255,255,0.25) 70%, rgba(255,255,255,0.0) 85%);
+  opacity: 0;
+  transform: translate(-80%, -80%) skewX(-20deg);
+  transition: opacity 0.2s;
+}
+.news-card:hover .news-card-shine {
+  opacity: 1;
+  transform: translate(40%, 40%) skewX(-20deg);
+  transition: opacity 0.2s, transform 1s cubic-bezier(.4,1,.7,1);
+}

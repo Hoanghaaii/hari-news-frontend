@@ -1,5 +1,33 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { NewsCardList } from "@/components/news/NewsCardList";
+
+const demoNewsList = [
+  {
+    title: "OpenAI ra mắt GPT-4o: AI đa phương thức miễn phí cho mọi người",
+    description: "GPT-4o có thể xử lý văn bản, hình ảnh, âm thanh và video, mang lại trải nghiệm AI toàn diện hơn bao giờ hết.",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
+    source: "VnExpress",
+    publishedAt: "2024-06-01T08:00:00Z",
+    verified: true,
+  },
+  {
+    title: "Apple công bố iOS 18 với nhiều tính năng AI mới",
+    description: "iOS 18 mang đến Siri thông minh hơn, tuỳ biến giao diện sâu hơn và bảo mật nâng cao.",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80",
+    source: "Tuổi Trẻ",
+    publishedAt: "2024-06-02T10:30:00Z",
+    verified: true,
+  },
+  {
+    title: "Việt Nam giành 3 HCV Olympic Toán quốc tế",
+    description: "Đội tuyển Việt Nam xuất sắc giành 3 huy chương vàng tại kỳ thi Olympic Toán quốc tế 2024.",
+    image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80",
+    source: "Thanh Niên",
+    publishedAt: "2024-06-03T14:00:00Z",
+    verified: true,
+  },
+];
 
 export default function HomePage() {
   return (
@@ -24,72 +52,8 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                <svg
-                  className="w-8 h-8 text-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold">Next.js 15</h3>
-              <p className="text-muted-foreground">
-                Framework React hiện đại với App Router và Server Components
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                <svg
-                  className="w-8 h-8 text-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold">Zustand + React Query</h3>
-              <p className="text-muted-foreground">
-                State management và data fetching hiệu quả
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                <svg
-                  className="w-8 h-8 text-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold">Shadcn/ui</h3>
-              <p className="text-muted-foreground">
-                Component library đẹp và có thể tùy chỉnh
-              </p>
-            </div>
+          <div className="mt-16">
+            <NewsCardList newsList={demoNewsList} />
           </div>
         </div>
       </div>
