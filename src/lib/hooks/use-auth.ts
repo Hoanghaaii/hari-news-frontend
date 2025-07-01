@@ -173,8 +173,11 @@ export const useAuth = () => {
   // Mutation gửi mã xác minh email
   const sendEmailVerification = useMutation({
     mutationFn: authApi.sendEmailVerification,
-    onSuccess: (data: MessageData) => {
+    onSuccess: (data: MessageData, email, context) => {
       toast.success(data.message);
+      if (context && typeof context === 'object' && 'onSuccess' in context && typeof context.onSuccess === 'function') {
+        context.onSuccess();
+      }
     },
     onError: (error: unknown) => {
       const errorMessage = extractErrorMessage(error);

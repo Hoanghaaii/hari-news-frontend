@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,6 +14,8 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Loader2 } from "lucide-react";
 
 const registerSchema = z
   .object({
@@ -38,6 +40,8 @@ export function RegisterForm() {
   } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [otpCooldown, setOtpCooldown] = useState(0);
 
   const {
     register,
@@ -51,8 +55,22 @@ export function RegisterForm() {
 
   const handleSendEmailVerification = () => {
     const email = getValues("email");
-    sendEmailVerification.mutate(email);
+    setOtpError("");
+    if (!email || errors.email) {
+      setOtpError("Vui lòng nhập email hợp lệ trước khi gửi mã");
+      return;
+    }
+    sendEmailVerification.mutate(email, { onSuccess: () => setOtpCooldown(60) });
   };
+
+  useEffect(() => {
+    if (otpCooldown > 0) {
+      const timer = setInterval(() => {
+        setOtpCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [otpCooldown]);
 
   const onSubmit = (data: RegisterFormData) => {
     const { name, email, password, token } = data;
@@ -151,30 +169,55 @@ export function RegisterForm() {
 
         <div className="space-y-2">
           <Label htmlFor="token">Mã xác minh email</Label>
-          <div className="flex gap-2 items-center">
-            <Button
-              type="button"
-              variant="outline"
-              disabled={sendEmailVerification.isPending}
-              onClick={handleSendEmailVerification}
-            >
-              {sendEmailVerification.isPending ? "Đang gửi..." : "Gửi mã"}
-            </Button>
-            <InputOTP
-              maxLength={6}
-              value={getValues("token") || ""}
-              onChange={(val) =>
-                setValue("token", val, { shouldValidate: true })
-              }
-              containerClassName="ml-2"
-            >
-              <InputOTPGroup>
-                {[...Array(6)].map((_, idx) => (
-                  <InputOTPSlot key={idx} index={idx} />
-                ))}
-              </InputOTPGroup>
-            </InputOTP>
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <InputOTP
+                maxLength={6}
+                value={getValues("token") || ""}
+                onChange={(val) =>
+                  setValue("token", val, { shouldValidate: true })
+                }
+                containerClassName="w-full"
+              >
+                <InputOTPGroup>
+                  {[...Array(6)].map((_, idx) => (
+                    <InputOTPSlot key={idx} index={idx} />
+                  ))}
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="ml-2 whitespace-nowrap flex items-center justify-center min-w-[90px]"
+                      disabled={sendEmailVerification.isPending || otpCooldown > 0}
+                      onClick={handleSendEmailVerification}
+                    >
+                      {sendEmailVerification.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        otpCooldown > 0
+                          ? `Gửi lại (${otpCooldown}s)`
+                          : "Gửi mã"
+                      )}
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                {otpCooldown > 0 && (
+                  <TooltipContent side="top">
+                    Có thể gửi lại sau {otpCooldown} giây
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </div>
+          {otpError && (
+            <p className="text-sm text-destructive mt-1">{otpError}</p>
+          )}
           {errors.token && (
             <p className="text-sm text-destructive">{errors.token.message}</p>
           )}
