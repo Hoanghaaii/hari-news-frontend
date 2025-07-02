@@ -4,8 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/lib/providers/query-provider";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import { Toaster } from "sonner";
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
+import Header from "@/components/layout/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,8 +29,7 @@ export default function RootLayout({
         >
           <QueryProvider>
             <Header />
-            <main className="min-h-[calc(100vh-120px)]">{children}</main>
-            <Footer />
+            <main className="h-screen w-full overflow-hidden">{children}</main>
             <Toaster position="top-right" richColors />
           </QueryProvider>
         </ThemeProvider>

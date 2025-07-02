@@ -2,45 +2,18 @@
 
 import Link from "next/link";
 import { useAuthStore } from "@/lib/store/auth-store";
-import {
-  Home,
-  Video,
-  Users,
-  Store,
-  Gamepad2,
-  AppWindow,
-  Bell,
-  MessageCircle,
-  UserCircle,
-  Search,
-  ChevronDown,
-} from "lucide-react";
+import { Bell, MessageCircle, UserCircle, Search } from "lucide-react";
 import { useState } from "react";
-
-const menuIcons = [
-  { icon: Home, href: "/", label: "Trang chủ" },
-  { icon: Video, href: "/video", label: "Video" },
-  { icon: Store, href: "/market", label: "Marketplace" },
-  { icon: Users, href: "/groups", label: "Nhóm" },
-  { icon: Gamepad2, href: "/games", label: "Trò chơi" },
-];
-
-const actionIcons = [
-  { icon: AppWindow, label: "Ứng dụng" },
-  { icon: MessageCircle, label: "Messenger" },
-  { icon: Bell, label: "Thông báo" },
-  { icon: UserCircle, label: "Tài khoản" },
-];
+import { Input } from "../ui/input";
+import { IconButtonWithBadge } from "../ui/icon-button-with-badge";
 
 export default function Header() {
   useAuthStore();
-  const [activeMenu, setActiveMenu] = useState("/");
   const [showMessenger, setShowMessenger] = useState(false);
-  const [showMenuDropdown, setShowMenuDropdown] = useState(false);
 
   return (
     <header className="w-full border-b border-gray-200 bg-white fixed top-0 left-0 z-50 shadow-sm">
-      <div className="max-w-full mx-auto flex items-center px-4 py-2">
+      <div className="max-w-full mx-auto flex items-center px-4 py-1">
         {/* Left: Logo + Search */}
         <div className="flex items-center gap-3 min-w-[48px] flex-shrink-0 justify-start flex-1">
           <Link href="/" className="flex items-center">
@@ -74,121 +47,26 @@ export default function Header() {
             >
               <Search size={18} />
             </span>
-            <input
+            <Input
               type="text"
               placeholder="Tìm kiếm trên Hari News"
-              className="w-full pl-9 pr-3 py-2 rounded-full text-sm placeholder:text-gray-400 focus:outline-none border"
-              style={{
-                background: "var(--color-gray-100)",
-                color: "var(--color-gray-900)",
-                borderColor: "var(--color-gray-200)",
-              }}
+              className="w-full pl-9 pr-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none border"
             />
           </div>
-          {/* ChevronDown: chỉ hiện trên mobile, nằm cùng nhóm với logo/search */}
-          <button
-            className="w-10 h-10 flex items-center justify-center rounded-full sm:hidden"
-            style={{
-              background: "var(--color-gray-100)",
-              color: "var(--color-gray-500)",
-            }}
-            onClick={() => setShowMenuDropdown((v) => !v)}
-            aria-label="Mở menu"
-          >
-            <ChevronDown size={22} />
-          </button>
         </div>
-        {/* Center: Menu icons (hidden on mobile) */}
-        <nav className="hidden sm:flex flex-1 items-center justify-center gap-8">
-          {menuIcons.map(({ icon: Icon, href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`relative flex flex-col items-center px-3 py-1 rounded-md transition-colors duration-150
-                ${
-                  activeMenu === href
-                    ? "text-blue-600"
-                    : "hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              style={
-                activeMenu === href
-                  ? { color: "var(--color-blue-600)" }
-                  : { color: "var(--color-gray-500)" }
-              }
-              onClick={() => setActiveMenu(href)}
-              title={label}
-            >
-              <Icon size={26} />
-              {activeMenu === href && (
-                <span
-                  className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 rounded-t-full"
-                  style={{ background: "var(--color-blue-600)" }}
-                />
-              )}
-            </Link>
-          ))}
-        </nav>
         {/* Right: Action icons */}
         <div className="flex items-center gap-3 flex-shrink-0 justify-end flex-1">
-          {actionIcons.map(({ icon: Icon, label }) => (
-            <button
-              key={label}
-              className={`relative w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-150
-                hover:text-gray-900`}
-              style={
-                label === "Messenger" && showMessenger
-                  ? {
-                      background: "var(--color-gray-100)",
-                      color: "var(--color-blue-600)",
-                      boxShadow: "0 0 0 2px var(--color-blue-600)",
-                    }
-                  : {
-                      background: "var(--color-gray-100)",
-                      color: "var(--color-gray-500)",
-                    }
-              }
-              title={label}
-              onClick={() => {
-                if (label === "Messenger") setShowMessenger((v) => !v);
-              }}
-            >
-              <Icon size={22} />
-            </button>
-          ))}
+          <IconButtonWithBadge
+            icon={MessageCircle}
+            count={3}
+            label="Messenger"
+            onClick={() => setShowMessenger((v) => !v)}
+            active={showMessenger}
+          />
+          <IconButtonWithBadge icon={Bell} count={12} label="Thông báo" />
+          <IconButtonWithBadge icon={UserCircle} label="Tài khoản" />
         </div>
       </div>
-      {/* Dropdown menu center on mobile */}
-      {showMenuDropdown && (
-        <div
-          className="sm:hidden fixed top-[56px] left-0 w-full border-t border-b shadow z-40 flex justify-center py-2 gap-2"
-          style={{
-            background: "var(--color-white)",
-            borderColor: "var(--color-gray-200)",
-          }}
-        >
-          {menuIcons.map(({ icon: Icon, href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`flex flex-col items-center px-2 py-1 rounded-md transition-colors duration-150
-                hover:bg-gray-100 hover:text-gray-900`}
-              style={
-                activeMenu === href
-                  ? { color: "var(--color-blue-600)" }
-                  : { color: "var(--color-gray-500)" }
-              }
-              onClick={() => {
-                setActiveMenu(href);
-                setShowMenuDropdown(false);
-              }}
-              title={label}
-            >
-              <Icon size={22} />
-              <span className="text-xs mt-1">{label}</span>
-            </Link>
-          ))}
-        </div>
-      )}
       {/* Messenger popup giả lập */}
       {showMessenger && (
         <div
