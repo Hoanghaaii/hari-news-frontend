@@ -41,7 +41,7 @@ export const useAuth = () => {
   } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: authApi.getCurrentUser,
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !user,
     staleTime: 5 * 60 * 1000, // 5 phút
     retry: (failureCount, error) => {
       // Nếu lỗi 401, thử refresh token trước khi retry
@@ -72,7 +72,7 @@ export const useAuth = () => {
         refreshTokenMutation.mutate();
       }
     }
-  }, [userError]);
+  });
 
   // Mutation đăng nhập
   const loginMutation = useMutation({
@@ -175,7 +175,12 @@ export const useAuth = () => {
     mutationFn: authApi.sendEmailVerification,
     onSuccess: (data: MessageData, email, context) => {
       toast.success(data.message);
-      if (context && typeof context === 'object' && 'onSuccess' in context && typeof context.onSuccess === 'function') {
+      if (
+        context &&
+        typeof context === "object" &&
+        "onSuccess" in context &&
+        typeof context.onSuccess === "function"
+      ) {
         context.onSuccess();
       }
     },

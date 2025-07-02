@@ -136,7 +136,7 @@ export function NewsCard({ news, onLike, onComment, onShare }: NewsCardProps) {
   };
 
   return (
-    <Card className="relative overflow-visible rounded-2xl shadow-md cursor-pointer group p-0 min-h-[260px] flex transition-all duration-300 will-change-transform news-card">
+    <Card className="relative overflow-visible rounded-2xl shadow-md cursor-pointer group p-0 min-h-[320px] flex transition-all duration-300 will-change-transform news-card">
       {/* Ảnh nền */}
       {news.image && (
         <div className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden">
@@ -171,14 +171,14 @@ export function NewsCard({ news, onLike, onComment, onShare }: NewsCardProps) {
         })}
       </div>
       {/* Text đè lên ảnh, căn trái, gọn lại, không overlay */}
-      <div className="absolute left-0 right-0 bottom-0 z-20 p-3 flex flex-col items-start gap-1 text-left w-full">
+      <div className="absolute left-0 right-0 bottom-0 z-20 p-1.5 flex flex-col items-start gap-0.5 text-left w-full">
         {/* Title */}
         <div className="w-full">
-          <div className="text-white text-base font-semibold drop-shadow line-clamp-2 px-2 py-1">
+          <div className="text-white text-sm font-semibold drop-shadow line-clamp-2 px-1 py-0.5">
             {news.title}
           </div>
         </div>
-        <div className="text-white/90 text-sm line-clamp-2 w-full px-1">
+        <div className="text-white/90 text-xs line-clamp-2 w-full px-1">
           {news.article}
         </div>
         {/* Dòng chỉ số: reaction, comment, share */}

@@ -29,7 +29,9 @@ export default function RootLayout({
         >
           <QueryProvider>
             <Header />
-            <main className="h-screen w-full overflow-hidden">{children}</main>
+            <main className="h-screen w-full overflow-hidden pt-[48px]">
+              {children}
+            </main>
             <Toaster position="top-right" richColors />
           </QueryProvider>
         </ThemeProvider>

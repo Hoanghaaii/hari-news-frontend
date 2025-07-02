@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +13,12 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Loader2 } from "lucide-react";
 
 const registerSchema = z
@@ -60,7 +64,9 @@ export function RegisterForm() {
       setOtpError("Vui lòng nhập email hợp lệ trước khi gửi mã");
       return;
     }
-    sendEmailVerification.mutate(email, { onSuccess: () => setOtpCooldown(60) });
+    sendEmailVerification.mutate(email, {
+      onSuccess: () => setOtpCooldown(60),
+    });
   };
 
   useEffect(() => {
@@ -78,14 +84,13 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="w-full max-w-md space-y-6">
+    <div className="w-full max-w-md space-y-1">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">Đăng ký</h1>
-        <p className="text-muted-foreground">Tạo tài khoản mới</p>
+        <h1 className="text-2xl font-bold">Đăng ký tài khoản</h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
+        <div className="space-y-1">
           <Label htmlFor="name">Họ và tên</Label>
           <Input
             id="name"
@@ -99,7 +104,7 @@ export function RegisterForm() {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -113,7 +118,7 @@ export function RegisterForm() {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           <Label htmlFor="password">Mật khẩu</Label>
           <div className="relative">
             <Input
@@ -140,7 +145,7 @@ export function RegisterForm() {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
           <div className="relative">
             <Input
@@ -167,7 +172,7 @@ export function RegisterForm() {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           <Label htmlFor="token">Mã xác minh email</Label>
           <div className="flex items-center gap-2">
             <div className="flex-1">
@@ -193,16 +198,18 @@ export function RegisterForm() {
                     <Button
                       type="button"
                       variant="outline"
-                      className="ml-2 whitespace-nowrap flex items-center justify-center min-w-[90px]"
-                      disabled={sendEmailVerification.isPending || otpCooldown > 0}
+                      className="ml-2 whitespace-no1rap flex items-center justify-center min-w-[90px]"
+                      disabled={
+                        sendEmailVerification.isPending || otpCooldown > 0
+                      }
                       onClick={handleSendEmailVerification}
                     >
                       {sendEmailVerification.isPending ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : otpCooldown > 0 ? (
+                        `Gửi lại (${otpCooldown}s)`
                       ) : (
-                        otpCooldown > 0
-                          ? `Gửi lại (${otpCooldown}s)`
-                          : "Gửi mã"
+                        "Gửi mã"
                       )}
                     </Button>
                   </span>
@@ -227,13 +234,6 @@ export function RegisterForm() {
           {isRegisterLoading ? "Đang đăng ký..." : "Đăng ký"}
         </Button>
       </form>
-
-      <div className="text-center text-sm">
-        Đã có tài khoản?{" "}
-        <Link href="/login" className="text-primary hover:underline">
-          Đăng nhập ngay
-        </Link>
-      </div>
     </div>
   );
 }

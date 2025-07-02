@@ -3,9 +3,17 @@
 import { useAuth } from "@/lib/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function DashboardPage() {
   const { user, isAuthenticated, logout, isLoadingUser } = useAuth();
+  console.log("[Dashboard] user:", user);
+  console.log("[Dashboard] isAuthenticated:", isAuthenticated);
+  useEffect(() => {
+    if (user) {
+      console.log("user:", user);
+    }
+  }, [user]);
 
   if (isLoadingUser) {
     return (
@@ -53,22 +61,50 @@ export default function DashboardPage() {
           <div className="p-6 border rounded-lg">
             <h3 className="text-lg font-semibold mb-2">Thông tin cá nhân</h3>
             <div className="space-y-2 text-sm">
-              <p><strong>ID:</strong> {user?.id}</p>
-              <p><strong>Email:</strong> {user?.email}</p>
-              <p><strong>Tên:</strong> {user?.name || 'Chưa cập nhật'}</p>
-              <p><strong>Vai trò:</strong> {user?.role}</p>
-              <p><strong>Trạng thái:</strong> {user?.status}</p>
-              <p><strong>Ngày tạo:</strong> {user?.created_at ? new Date(user.created_at).toLocaleDateString('vi-VN') : 'N/A'}</p>
+              <p>
+                <strong>ID:</strong> {user?.id}
+              </p>
+              <p>
+                <strong>Email:</strong> {user?.email}
+              </p>
+              <p>
+                <strong>Tên:</strong> {user?.name || "Chưa cập nhật"}
+              </p>
+              <p>
+                <strong>Vai trò:</strong> {user?.role}
+              </p>
+              <p>
+                <strong>Trạng thái:</strong> {user?.status}
+              </p>
+              <p>
+                <strong>Ngày tạo:</strong>{" "}
+                {user?.created_at
+                  ? new Date(user.created_at).toLocaleDateString("vi-VN")
+                  : "N/A"}
+              </p>
             </div>
           </div>
 
           <div className="p-6 border rounded-lg">
             <h3 className="text-lg font-semibold mb-2">Thống kê</h3>
             <div className="space-y-2 text-sm">
-              <p><strong>Số lần đăng nhập:</strong> {user?.loginCount || 0}</p>
-              <p><strong>Trạng thái tài khoản:</strong> {user?.isActive ? 'Hoạt động' : 'Không hoạt động'}</p>
-              <p><strong>Xác thực email:</strong> {user?.isVerified ? 'Đã xác thực' : 'Chưa xác thực'}</p>
-              <p><strong>Lần đăng nhập cuối:</strong> {user?.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString('vi-VN') : 'Chưa có'}</p>
+              <p>
+                <strong>Số lần đăng nhập:</strong> {user?.loginCount || 0}
+              </p>
+              <p>
+                <strong>Trạng thái tài khoản:</strong>{" "}
+                {user?.isActive ? "Hoạt động" : "Không hoạt động"}
+              </p>
+              <p>
+                <strong>Xác thực email:</strong>{" "}
+                {user?.isVerified ? "Đã xác thực" : "Chưa xác thực"}
+              </p>
+              <p>
+                <strong>Lần đăng nhập cuối:</strong>{" "}
+                {user?.lastLoginAt
+                  ? new Date(user.lastLoginAt).toLocaleDateString("vi-VN")
+                  : "Chưa có"}
+              </p>
             </div>
           </div>
 

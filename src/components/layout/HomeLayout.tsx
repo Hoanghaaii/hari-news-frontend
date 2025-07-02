@@ -8,9 +8,9 @@ export type HomeLayoutProps = {
 
 export function HomeLayout({ left, center, right }: HomeLayoutProps) {
   return (
-    <div className="w-full max-w-[1440px] mx-auto px-2 md:px-4 lg:px-8 py-6 pt-[70px]">
+    <div className="w-full max-w-[1440px] mx-auto px-2 md:px-4 lg:px-8">
       <div
-        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-0 min-h-[calc(100vh-70px)]"
+        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-0 min-h-[calc(100vh-48px)]"
         style={{ height: "calc(100vh - 70px)" }}
       >
         {/* Sidebar trái: ẩn trên mobile, chiếm 1/6 trên desktop */}
