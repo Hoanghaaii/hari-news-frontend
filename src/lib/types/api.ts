@@ -81,3 +81,44 @@ export interface ResetPasswordData {
   token: string;
   newPassword: string;
 }
+
+// User Create DTO (FE -> BE)
+export interface CreateUserDto {
+  email: string;
+  password: string;
+  name: string;
+  token?: string;
+  isVerified?: boolean;
+}
+
+// User Update DTO (FE -> BE)
+export interface UpdateUserDto {
+  name?: string;
+  avatar?: string;
+  bio?: string;
+  phone?: string;
+  dateOfBirth?: string;
+  gender?: 'male' | 'female' | 'other';
+  address?: string;
+  city?: string;
+  password?: string;
+}
+
+// User List Response
+export interface UserListResponse {
+  data: User[];
+  message: string;
+  metadata: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+    filters: Record<string, unknown>;
+  };
+}
+
+// User Profile Response
+export interface UserProfileResponse {
+  user: User;
+  message: string;
+}

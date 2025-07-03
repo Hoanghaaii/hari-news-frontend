@@ -81,4 +81,14 @@ export async function apiDelete<T = undefined>(url: string, config?: AxiosReques
   } catch (error: unknown) {
     handleApiError(error);
   }
+}
+
+// Hàm PATCH
+export async function apiPatch<T = undefined, B = unknown>(url: string, body?: B, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  try {
+    const response = await api.patch<ApiResponse<T>>(url, body, config);
+    return unwrapResponse<T>(response);
+  } catch (error: unknown) {
+    handleApiError(error);
+  }
 } 

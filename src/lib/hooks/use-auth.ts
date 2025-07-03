@@ -5,22 +5,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { authApi } from "@/lib/api/auth";
 import { MessageData } from "@/lib/types/api";
 import { toast } from "sonner";
-
-// Hàm extractErrorMessage lấy message từ error chuẩn hóa của util API
-function extractErrorMessage(error: unknown): string {
-  if (
-    error &&
-    typeof error === "object" &&
-    "message" in error &&
-    typeof (error as { message: unknown }).message === "string"
-  ) {
-    return (error as { message: string }).message;
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return "Đã có lỗi xảy ra";
-}
+import { extractErrorMessage } from "@/lib/utils";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
