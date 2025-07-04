@@ -32,7 +32,8 @@ export function LoginForm() {
     login(data);
   };
 
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+  const BACKEND_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
   const handleOAuthLogin = (provider: "google" | "facebook") => {
     if (provider !== "google") return;
     const popup = window.open(
