@@ -3,6 +3,7 @@ import { userApi } from "@/lib/api/user";
 import { toast } from "sonner";
 import { UpdateUserDto, MessageData } from "@/lib/types/api";
 import { extractErrorMessage } from "@/lib/utils";
+import { userConfigApi } from "@/lib/api/user";
 
 export const useUserById = (id: number | string) =>
   useQuery({
@@ -84,5 +85,64 @@ export const useUser = (params?: {
     isCreatingUser: createUserMutation.isPending,
     isUpdatingUser: updateUserMutation.isPending,
     isDeletingUser: deleteUserMutation.isPending,
+  };
+};
+
+export const useUserConfig = () => {
+  const queryClient = useQueryClient();
+
+  // Query: lấy config self
+  const configQuery = useQuery({
+    queryKey: ["userConfig"],
+    queryFn: userConfigApi.getMyConfig,
+  });
+
+  // Mutation: tạo config self
+  const createConfigMutation = useMutation({
+    mutationFn: userConfigApi.createMyConfig,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userConfig"] });
+    },
+    onError: (error: unknown) => {
+      toast.error(extractErrorMessage(error));
+    },
+  });
+
+  // Mutation: update config self
+  const updateConfigMutation = useMutation({
+    mutationFn: userConfigApi.updateMyConfig,
+    onSuccess: (data) => {
+      // Optimistic update: cập nhật cache userConfig với dữ liệu mới trả về
+      queryClient.setQueryData(["userConfig"], (old: any) => ({
+        ...old,
+        config: data.config,
+      }));
+    },
+    onError: (error: unknown) => {
+      toast.error(extractErrorMessage(error));
+    },
+  });
+
+  // Mutation: xóa config self
+  const deleteConfigMutation = useMutation({
+    mutationFn: userConfigApi.deleteMyConfig,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userConfig"] });
+    },
+    onError: (error: unknown) => {
+      toast.error(extractErrorMessage(error));
+    },
+  });
+
+  return {
+    userConfig: configQuery.data?.config,
+    isLoadingUserConfig: configQuery.isLoading,
+    createUserConfig: createConfigMutation.mutate,
+    updateUserConfig: updateConfigMutation.mutate,
+    deleteUserConfig: deleteConfigMutation.mutate,
+    // Loading states
+    isCreatingUserConfig: createConfigMutation.isPending,
+    isUpdatingUserConfig: updateConfigMutation.isPending,
+    isDeletingUserConfig: deleteConfigMutation.isPending,
   };
 };

@@ -122,3 +122,39 @@ export interface UserProfileResponse {
   user: User;
   message: string;
 }
+
+// UserConfig types
+export interface UserConfigPreferences {
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  privacyLevel: 'public' | 'private' | 'friends';
+  theme: 'light' | 'dark';
+}
+
+export interface UserConfigSocialLinks {
+  [key: string]: string;
+}
+
+export interface UserConfig {
+  id: number;
+  userId: number;
+  preferences: UserConfigPreferences;
+  socialLinks: UserConfigSocialLinks;
+  twoFactorEnabled: boolean;
+  twoFactorSecret?: string;
+  passwordResetToken?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserConfigUpdateDto {
+  preferences?: Partial<UserConfigPreferences>;
+  socialLinks?: UserConfigSocialLinks;
+  twoFactorEnabled?: boolean;
+  twoFactorSecret?: string;
+}
+
+export interface UserConfigResponse {
+  config: UserConfig;
+  message: string;
+}

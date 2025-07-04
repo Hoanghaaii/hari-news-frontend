@@ -26,6 +26,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "../ui/alert-dialog";
+import { SettingsDialog } from "@/components/settings-dialog";
 
 export default function Header() {
   const { user, isAuthenticated } = useAuthStore();
@@ -33,6 +34,7 @@ export default function Header() {
   const [showMessenger, setShowMessenger] = useState(false);
   const [openAuthDialog, setOpenAuthDialog] = useState(false);
   const [openLogoutConfirm, setOpenLogoutConfirm] = useState(false);
+  const [openSettingsDialog, setOpenSettingsDialog] = useState(false);
 
   return (
     <header className="w-full border-b border-gray-200 bg-white fixed top-0 left-0 z-50 shadow-sm">
@@ -119,8 +121,8 @@ export default function Header() {
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard">Dashboard</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/settings">Cài đặt</Link>
+                    <DropdownMenuItem onClick={() => setOpenSettingsDialog(true)}>
+                      Cài đặt
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
@@ -189,6 +191,7 @@ export default function Header() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <SettingsDialog open={openSettingsDialog} onOpenChange={setOpenSettingsDialog} />
     </header>
   );
 }
