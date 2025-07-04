@@ -11,7 +11,11 @@ export const useUserById = (id: number | string) =>
     enabled: !!id,
   });
 
-export const useUser = (params?: { page?: number; pageSize?: number; [key: string]: unknown }) => {
+export const useUser = (params?: {
+  page?: number;
+  pageSize?: number;
+  [key: string]: unknown;
+}) => {
   const queryClient = useQueryClient();
 
   // Query: danh sách user
@@ -81,4 +85,4 @@ export const useUser = (params?: { page?: number; pageSize?: number; [key: strin
     isUpdatingUser: updateUserMutation.isPending,
     isDeletingUser: deleteUserMutation.isPending,
   };
-}; 
+};

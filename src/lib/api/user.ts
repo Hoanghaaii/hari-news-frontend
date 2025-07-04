@@ -43,15 +43,22 @@ export const userApi = {
     return res.data;
   },
 
-  // Update user
-  updateUser: async (id: number | string, data: UpdateUserDto): Promise<User> => {
-    const res = await apiPatch<User, UpdateUserDto>(`/user/${id}`, data);
-    if (!res.data) throw new Error(res.message || "Cập nhật user thất bại");
+  // Update profile của chính mình
+  updateProfile: async (data: UpdateUserDto): Promise<User> => {
+    const res = await apiPatch<User, UpdateUserDto>(`/user/profile`, data);
+    if (!res.data) throw new Error(res.message || "Cập nhật profile thất bại");
     return res.data;
   },
 
   // Xóa user
   deleteUser: async (id: number | string): Promise<MessageData> => {
     return apiDelete<MessageData>(`/user/${id}`);
+  },
+
+  // Update user (cho admin/superadmin)
+  updateUser: async (id: number | string, data: UpdateUserDto): Promise<User> => {
+    const res = await apiPatch<User, UpdateUserDto>(`/user/${id}`, data);
+    if (!res.data) throw new Error(res.message || "Cập nhật user thất bại");
+    return res.data;
   },
 }; 

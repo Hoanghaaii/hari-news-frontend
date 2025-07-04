@@ -175,6 +175,20 @@ export const useAuth = () => {
     },
   });
 
+  // Mutation set cookie từ FE (sau khi nhận token từ OAuth)
+  const setCookieMutation = useMutation({
+    mutationFn: authApi.setCookie,
+    onSuccess: (data: MessageData) => {
+      toast.success(data.message || "Đăng nhập thành công!");
+      // Có thể reload user info tại đây nếu muốn
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+    },
+    onError: (error: unknown) => {
+      const errorMessage = extractErrorMessage(error);
+      toast.error(errorMessage);
+    },
+  });
+
   return {
     // State
     user: currentUser || user,
@@ -190,6 +204,7 @@ export const useAuth = () => {
     forgotPassword: forgotPasswordMutation.mutate,
     resetPassword: resetPasswordMutation.mutate,
     sendEmailVerification,
+    setCookie: setCookieMutation.mutate,
 
     // Loading states
     isLoginLoading: loginMutation.isPending,
@@ -199,5 +214,6 @@ export const useAuth = () => {
     isChangePasswordLoading: changePasswordMutation.isPending,
     isForgotPasswordLoading: forgotPasswordMutation.isPending,
     isResetPasswordLoading: resetPasswordMutation.isPending,
+    isSetCookieLoading: setCookieMutation.isPending,
   };
 };

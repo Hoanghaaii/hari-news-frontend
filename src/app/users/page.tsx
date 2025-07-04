@@ -83,9 +83,31 @@ export default function UsersPage() {
                   <TableCell>{u.role}</TableCell>
                   <TableCell>{u.status}</TableCell>
                   <TableCell className="space-x-2">
-                    <Button size="icon" variant="ghost" onClick={() => setOpenView(u.id)}><Eye size={16} /></Button>
-                    <Button size="icon" variant="ghost" onClick={() => { setOpenEdit(u.id); setEditForm({ name: u.name || "" }); }}><Edit size={16} /></Button>
-                    <Button size="icon" variant="destructive" onClick={() => deleteUser(u.id)} disabled={isDeletingUser}><Trash2 size={16} /></Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => setOpenView(u.id)}
+                    >
+                      <Eye size={16} />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => {
+                        setOpenEdit(u.id);
+                        setEditForm({ name: u.name || "" });
+                      }}
+                    >
+                      <Edit size={16} />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="destructive"
+                      onClick={() => deleteUser(u.id)}
+                      disabled={isDeletingUser}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -131,7 +153,7 @@ export default function UsersPage() {
           <h2 className="font-bold text-lg mb-4">Tạo user mới</h2>
           <form
             className="space-y-3"
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
               createUser(form);
               setOpenCreate(false);
@@ -140,18 +162,40 @@ export default function UsersPage() {
           >
             <div>
               <Label>Email</Label>
-              <Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required type="email" />
+              <Input
+                value={form.email}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, email: e.target.value }))
+                }
+                required
+                type="email"
+              />
             </div>
             <div>
               <Label>Tên</Label>
-              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
+              <Input
+                value={form.name}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, name: e.target.value }))
+                }
+                required
+              />
             </div>
             <div>
               <Label>Mật khẩu</Label>
-              <Input value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required type="password" />
+              <Input
+                value={form.password}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, password: e.target.value }))
+                }
+                required
+                type="password"
+              />
             </div>
             <Button type="submit" className="w-full" disabled={isCreatingUser}>
-              {isCreatingUser ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+              {isCreatingUser ? (
+                <Loader2 className="animate-spin mr-2" size={16} />
+              ) : null}
               Tạo user
             </Button>
           </form>
@@ -163,21 +207,45 @@ export default function UsersPage() {
         <DialogContent className="max-w-md w-full">
           <h2 className="font-bold text-lg mb-4">Thông tin user</h2>
           {userView.isLoading ? (
-            <div className="flex items-center"><Loader2 className="animate-spin mr-2" /> Đang tải...</div>
+            <div className="flex items-center">
+              <Loader2 className="animate-spin mr-2" /> Đang tải...
+            </div>
           ) : userView.data ? (
             <div className="space-y-2 text-sm">
-              <div><b>ID:</b> {userView.data.id}</div>
-              <div><b>Email:</b> {userView.data.email}</div>
-              <div><b>Tên:</b> {userView.data.name}</div>
-              <div><b>Role:</b> {userView.data.role}</div>
-              <div><b>Trạng thái:</b> {userView.data.status}</div>
-              <div><b>Ngày tạo:</b> {userView.data.created_at}</div>
-              <div><b>Avatar:</b> {userView.data.avatar || "-"}</div>
-              <div><b>Bio:</b> {userView.data.bio || "-"}</div>
-              <div><b>Phone:</b> {userView.data.phone || "-"}</div>
-              <div><b>City:</b> {userView.data.city || "-"}</div>
+              <div>
+                <b>ID:</b> {userView.data.id}
+              </div>
+              <div>
+                <b>Email:</b> {userView.data.email}
+              </div>
+              <div>
+                <b>Tên:</b> {userView.data.name}
+              </div>
+              <div>
+                <b>Role:</b> {userView.data.role}
+              </div>
+              <div>
+                <b>Trạng thái:</b> {userView.data.status}
+              </div>
+              <div>
+                <b>Ngày tạo:</b> {userView.data.created_at}
+              </div>
+              <div>
+                <b>Avatar:</b> {userView.data.avatar || "-"}
+              </div>
+              <div>
+                <b>Bio:</b> {userView.data.bio || "-"}
+              </div>
+              <div>
+                <b>Phone:</b> {userView.data.phone || "-"}
+              </div>
+              <div>
+                <b>City:</b> {userView.data.city || "-"}
+              </div>
             </div>
-          ) : <div>Không tìm thấy user.</div>}
+          ) : (
+            <div>Không tìm thấy user.</div>
+          )}
         </DialogContent>
       </Dialog>
 
@@ -186,28 +254,47 @@ export default function UsersPage() {
         <DialogContent className="max-w-md w-full">
           <h2 className="font-bold text-lg mb-4">Cập nhật user</h2>
           {userEdit.isLoading ? (
-            <div className="flex items-center"><Loader2 className="animate-spin mr-2" /> Đang tải...</div>
+            <div className="flex items-center">
+              <Loader2 className="animate-spin mr-2" /> Đang tải...
+            </div>
           ) : userEdit.data ? (
             <form
               className="space-y-3"
-              onSubmit={e => {
+              onSubmit={(e) => {
                 e.preventDefault();
-                updateUser({ id: userEdit.data!.id, data: { name: editForm.name } });
+                updateUser({
+                  id: userEdit.data!.id,
+                  data: { name: editForm.name },
+                });
                 setOpenEdit(null);
               }}
             >
               <div>
                 <Label>Tên</Label>
-                <Input value={editForm.name || ""} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} required />
+                <Input
+                  value={editForm.name || ""}
+                  onChange={(e) =>
+                    setEditForm((f) => ({ ...f, name: e.target.value }))
+                  }
+                  required
+                />
               </div>
-              <Button type="submit" className="w-full" disabled={isUpdatingUser}>
-                {isUpdatingUser ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isUpdatingUser}
+              >
+                {isUpdatingUser ? (
+                  <Loader2 className="animate-spin mr-2" size={16} />
+                ) : null}
                 Lưu
               </Button>
             </form>
-          ) : <div>Không tìm thấy user.</div>}
+          ) : (
+            <div>Không tìm thấy user.</div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
   );
-} 
+}

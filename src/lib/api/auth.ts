@@ -70,4 +70,12 @@ export const authApi = {
       { email }
     );
   },
+
+  // Set cookie từ FE (sau khi nhận token từ OAuth)
+  setCookie: async (tokens: { accessToken: string; refreshToken: string }): Promise<MessageData> => {
+    return apiPost<MessageData, { accessToken: string; refreshToken: string }>(
+      "/auth/set-cookie",
+      tokens
+    );
+  },
 };
