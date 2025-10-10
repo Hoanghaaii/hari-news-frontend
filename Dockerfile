@@ -12,10 +12,6 @@ RUN npm install
 # Copy all source code
 COPY . .
 
-ENV NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="haricorp"
-ENV NEXT_PUBLIC_BACKEND_URL="http://backend:3000/api"
-ENV NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="hari-news-upload"
-
 # Build the app
 RUN npm run build
 
